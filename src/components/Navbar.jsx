@@ -51,7 +51,6 @@ const Navbar = () => {
     });
   }, [isCateNav, isAcc, isCart]);
 
-
   let handleCartPage = () =>{
     navigate("/cart")
     setIsCart(false)

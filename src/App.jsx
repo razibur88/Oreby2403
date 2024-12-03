@@ -13,6 +13,8 @@ import About from "./pages/About";
 import Error from "./pages/Error";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 
 let router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +26,8 @@ let router = createBrowserRouter(
       <Route path="/about" element={<About/>}></Route>
       <Route path="/cart" element={<Cart/>}></Route>
       <Route path="/checkout" element={<Checkout/>}></Route>
+      <Route path="/login" element={<Login/>}></Route>
+      <Route path="/registration" element={<Registration/>}></Route>
       <Route path="*" element={<Error/>}></Route>
     </Route>
   )
