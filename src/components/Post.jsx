@@ -8,19 +8,22 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "./slice/productSlice";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Space } from 'antd';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Post = ({ allPage, activeGrid, categoryFilter,priceShow }) => {
+  const auth = getAuth();
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
-  };
-  const hideModal = () => {
-    setOpen(false);
   };
   let { info, loading } = useContext(ApiData);
   let [filterShow, setFilterShow] = useState([]);
   let [count, setCount] = useState(true);
   let dispatch = useDispatch()
+  let [email, setEmail] = useState("")
+  let [password, setPassword] = useState("")
+  let [err, setErr] = useState("")
+
   useEffect(() => {
     let fiveFilter = categoryFilter.slice(0, 5);
     setFilterShow(fiveFilter);
@@ -38,6 +41,25 @@ const Post = ({ allPage, activeGrid, categoryFilter,priceShow }) => {
 
   let handleCartProduct = (item) =>{
     dispatch(addToCart({...item, qun:1}))
+  }
+  let handleEmail = (e) =>{
+    setEmail(e.target.value)
+  }
+  let handlePassword = (e) =>{
+    setPassword(e.target.value)
+  }
+
+  let handleSubmit = () =>{
+    signInWithEmailAndPassword(auth, email, password)
+  .then((user) => {
+    console.log("ok",user);
+  })
+  .catch((error) => {
+    if(error.code.includes("auth/invalid-credential")){
+      setErr("InValid Email");
+    }
+    
+  });
   }
 
   return (
@@ -149,16 +171,17 @@ const Post = ({ allPage, activeGrid, categoryFilter,priceShow }) => {
       <Modal className="text-center"
         title="Login"
         open={open}
-        onOk={hideModal}
-        onCancel={hideModal}
+        onOk={handleSubmit}
         okText="Login"
+        onCancel={false}
       >
        <div className="">
-        <input className="py-2 border-2 border-[#262626] w-full rounded-lg px-4" type="email" placeholder="Email" />
+        <input onChange={handleEmail} className="py-2 border-2 border-[#262626] w-full rounded-lg px-4" type="email" placeholder="Email" />
        </div>
        <div className="mt-4">
-       <input className="py-2 border-2 border-[#262626] w-full rounded-lg px-4" type="password" placeholder="Password" />
+       <input onChange={handlePassword} className="py-2 border-2 border-[#262626] w-full rounded-lg px-4" type="password" placeholder="Password" />
        </div>
+       <p className="text-red-500">{err}</p>
        <p className="text-center mt-3">Don't have an account? <Link className="text-[blue]" to="/registration">Sign up</Link></p>
       </Modal>
 
